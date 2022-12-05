@@ -4,10 +4,51 @@ console.log('filter projects');
 const productsContainer = document.querySelector('.products-container');
 const inputForm = document.querySelector('.input-form');
 const searchInput = document.querySelector('.search-input');
-const companiesDOM = document.querySelector('.companies');
+const companiesContainer = document.querySelector('.companies');
 // console.log(companies);
 
+window.addEventListener('DOMContentLoaded', function () {
+  displayCompanies(products);
+  displayProducts(products);
+
+  companiesContainer.addEventListener('click', function (e) {
+    searchInput.value = '';
+    const hasClass = e.target.classList.contains('company-btn');
+    const target = e.target.dataset.id;
+
+    if (hasClass) {
+      if (target == 'all') {
+        displayProducts(products);
+        return;
+      }
+      const companyFilter = products.filter(
+        (product) => product.company === target
+      );
+      displayProducts(companyFilter);
+    }
+  });
+  //   const allCompanies = document.querySelectorAll('.company-btn');
+  //   allCompanies.forEach((company) => {
+  // company.addEventListener('click', function () {
+  //   const searchValue = company.dataset.id;
+  //   if (searchValue === 'all') {
+  //     displayProducts(products);
+  //     return;
+  //   }
+  //   const companyFilter = products.filter(
+  //     (product) => product.company === searchValue
+  //   );
+  //   displayProducts(companyFilter);
+  // });
+  //   });
+});
+
 function displayProducts(products) {
+  if (products.length === 0) {
+    productsContainer.innerHTML =
+      '<h6>sorry,  we no get result for your search</h6>';
+    return;
+  }
   const allProducts = products.map((product) => {
     const { id, title, image, price } = product;
     return ` <article class="product" data-id=${id}>
@@ -29,26 +70,12 @@ function displayCompanies(products) {
     'all',
     ...new Set(products.map((product) => product.company)),
   ];
-  let companyEl = '';
-  companies.forEach((company) => {
-    companyEl += ` <button class="company-btn" data-id=${company}>${company}</button>`;
-  });
-  companiesDOM.innerHTML = companyEl;
 
-  const allCompanies = document.querySelectorAll('.company-btn');
-  allCompanies.forEach((company) => {
-    company.addEventListener('click', function () {
-      const searchValue = company.dataset.id;
-      const filterCompany = products.filter(
-        (product) => product.company === searchValue
-      );
-      displayProducts(filterCompany);
-    });
+  const allCompanies = companies.map((company) => {
+    return ` <button class="company-btn" data-id=${company}>${company}</button>`;
   });
+  companiesContainer.innerHTML = allCompanies.join('');
 }
-
-displayCompanies(products);
-displayProducts(products);
 
 inputForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -59,10 +86,5 @@ inputForm.addEventListener('keyup', function (e) {
   const inputFilter = products.filter((product) =>
     product.title.includes(value)
   );
-  if (inputFilter.length < 1) {
-    productsContainer.innerHTML =
-      '<h6>sorry,  we no get result for your search</h6>';
-    return;
-  }
   displayProducts(inputFilter);
 });
