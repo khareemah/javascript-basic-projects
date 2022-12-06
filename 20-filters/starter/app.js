@@ -1,11 +1,7 @@
-console.log(products);
-console.log('filter projects');
-
 const productsContainer = document.querySelector('.products-container');
 const inputForm = document.querySelector('.input-form');
 const searchInput = document.querySelector('.search-input');
 const companiesContainer = document.querySelector('.companies');
-// console.log(companies);
 
 window.addEventListener('DOMContentLoaded', function () {
   displayCompanies(products);
