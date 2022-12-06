@@ -32,8 +32,6 @@ Counter.prototype.reset = function () {
 const firstCounter = new Counter(100, getElement('.first-counter'));
 const secondCounter = new Counter(200, getElement('.second-counter'));
 
-console.log(firstCounter);
-console.log(secondCounter);
 function getElement(className) {
   const dom = document.querySelector(className);
   if (dom) {
