@@ -23,7 +23,7 @@ Counter.prototype.decrease = function () {
 };
 Counter.prototype.increase = function () {
   this.value += 1;
-  this.valDOM.textContent = this.valu;
+  this.valDOM.textContent = this.value;
 };
 Counter.prototype.reset = function () {
   this.value = 0;
