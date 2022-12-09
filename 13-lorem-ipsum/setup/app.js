@@ -22,7 +22,9 @@ form.addEventListener('submit', function (e) {
   if (value >= 1 && value <= text.length) {
     paragraphs = text.slice(0, value);
   } else {
-    paragraphs = text.slice(0, 1);
+    let randomNum = Math.floor(Math.random() * text.length);
+    // paragraphs = text.slice(randomNum - 1, randomNum);
+    paragraphs = [text[randomNum]];
   }
   displayParagraphs(paragraphs);
 });
