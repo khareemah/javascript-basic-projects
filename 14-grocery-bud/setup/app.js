@@ -134,7 +134,6 @@ function createItem(name, id) {
 // ****** SETUP ITEMS **********
 window.addEventListener('DOMContentLoaded', function () {
   groceryList = JSON.parse(localStorage.getItem('list')) || [];
-  console.log(groceryList);
   if (groceryList.length > 0) {
     groceryContainer.classList.add('show-container');
   }
