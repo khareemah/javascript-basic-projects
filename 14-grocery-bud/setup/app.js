@@ -7,6 +7,7 @@ const alert = document.querySelector('.alert');
 const groceryItems = groceryContainer.querySelector('.grocery-list');
 const clearBtn = groceryContainer.querySelector('.clear-btn');
 let editFlag = false;
+let editElement;
 let editID = null;
 let groceryValue = '';
 let groceryList = [];
@@ -20,26 +21,21 @@ groceryForm.addEventListener('submit', function (e) {
   if (!groceryValue) {
     showMessage({ style: 'danger', message: 'value is empty' });
   } else if (groceryValue && editFlag == false) {
+    const groceryItem = {
+      name: groceryValue,
+      id: new Date().getTime().toString(),
+    };
     showMessage({ style: 'success', message: 'grocery item added' });
     groceryContainer.classList.add('show-container');
-    addGroceryItem(groceryValue);
-    //update list in local storage
+    addToLocalStorage(groceryItem);
+    addGroceryItem(groceryItem);
+    // update list in local storage
   } else {
-    const itemToEdit = groceryList.find((item) => item.id == editID);
-    itemToEdit.name = grocery.value;
-    console.log(groceryList);
-    [...groceryItems.children].forEach((item) => {
-      const itemId = item.dataset.id;
-      let itemName = item.querySelector('p').textContent;
-      if (itemId == editID) {
-        showMessage({ style: 'success', message: 'grocery item edited' });
-        item.querySelector('p').textContent = grocery.value;
-        grocery.value = '';
-        editFlag = false;
-        editID = null;
-        submitBtn.textContent = 'submit';
-      }
-    });
+    showMessage({ style: 'success', message: 'grocery item edited' });
+    editLocalStorage();
+    editElement.querySelector('p').textContent = grocery.value;
+    grocery.value = '';
+    setToDefault();
   }
 });
 
@@ -53,15 +49,65 @@ function showMessage({ style, message }) {
     alert.classList.remove(`alert-${style}`);
   }, 1000);
 }
-function addGroceryItem(groceryValue) {
+function addGroceryItem({ name, id }) {
   grocery.value = '';
-  const groceryItem = {
-    name: groceryValue,
-    id: new Date().getTime().toString(),
-  };
-  groceryList.push(groceryItem);
+  createItem(name, id);
+}
+function deleteItem(e) {
+  const target = e.currentTarget.parentElement.parentElement;
+  const id = target.dataset.id;
+  deleteFromLocalStorage(id);
+  groceryItems.removeChild(target);
+  showMessage({ style: 'success', message: 'grocery item removed' });
+  setToDefault();
+  if (groceryItems.children.length == 0) {
+    groceryContainer.classList.remove('show-container');
+  }
+}
+function editItem(e) {
+  editElement = e.currentTarget.parentElement.parentElement;
+  editFlag = true;
+  editID = editElement.dataset.id;
+  grocery.value = editElement.querySelector('p').innerText;
+  submitBtn.textContent = 'edit';
+}
+function setToDefault() {
+  grocery.value = '';
+  editID = null;
+  editFlag = false;
+  submitBtn.textContent = 'submit';
+}
+clearBtn.addEventListener('click', function () {
+  const list = groceryItems.children;
+  groceryList = [];
+  clearLocalStorage();
+  groceryContainer.classList.remove('show-container');
+  [...list].forEach((item) => {
+    groceryItems.removeChild(item);
+  });
+  showMessage({ style: 'danger', message: 'grocery list cleared' });
+  setToDefault();
+});
+
+// ****** LOCAL STORAGE **********
+function addToLocalStorage({ name, id }) {
+  groceryList.push({ name, id });
   console.log(groceryList);
-  const { name, id } = groceryItem;
+  localStorage.setItem('list', JSON.stringify(groceryList));
+}
+function editLocalStorage() {
+  const itemToEdit = groceryList.find((item) => item.id == editID);
+  itemToEdit.name = grocery.value;
+  localStorage.setItem('list', JSON.stringify(groceryList));
+}
+function deleteFromLocalStorage(id) {
+  groceryList = groceryList.filter((item) => item.id !== id);
+  localStorage.setItem('list', JSON.stringify(groceryList));
+}
+function clearLocalStorage() {
+  localStorage.setItem('list', JSON.stringify(groceryList));
+}
+function createItem(name, id) {
   const element = document.createElement('article');
   element.setAttribute('data-id', id);
   element.classList.add('grocery-item');
@@ -85,40 +131,15 @@ function addGroceryItem(groceryValue) {
   deleteBtn.addEventListener('click', deleteItem);
   editBtn.addEventListener('click', editItem);
 }
-function deleteItem(e) {
-  const target = e.currentTarget.parentElement.parentElement;
-  groceryList = groceryList.filter((item) => item.id !== target.dataset.id);
-  console.log(groceryList);
-  groceryItems.removeChild(target);
-  showMessage({ style: 'success', message: 'grocery item removed' });
-  grocery.value = '';
-  editID = null;
-  editFlag = false;
-  submitBtn.textContent = 'submit';
-  if (groceryItems.children.length == 0) {
-    groceryContainer.classList.remove('show-container');
-  }
-  //update in local storage
-}
-function editItem(e) {
-  const target = e.currentTarget.parentElement.parentElement;
-  editFlag = true;
-  editID = target.dataset.id;
-  grocery.value = target.innerText;
-  submitBtn.textContent = 'edit';
-}
-
-clearBtn.addEventListener('click', function () {
-  const list = groceryItems.children;
-
-  groceryContainer.classList.remove('show-container');
-  [...list].forEach((item) => {
-    groceryItems.removeChild(item);
-  });
-  showMessage({ style: 'danger', message: 'grocery list cleared' });
-});
-// ****** LOCAL STORAGE **********
-function addToLocalStorage() {}
-function removeFromLocalStorage() {}
 // ****** SETUP ITEMS **********
-window.addEventListener('DOMContentLoaded', function () {});
+window.addEventListener('DOMContentLoaded', function () {
+  groceryList = JSON.parse(localStorage.getItem('list')) || [];
+  console.log(groceryList);
+  if (groceryList.length > 0) {
+    groceryContainer.classList.add('show-container');
+  }
+  groceryList.forEach((item) => {
+    const { name, id } = item;
+    createItem(name, id);
+  });
+});
