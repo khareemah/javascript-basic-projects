@@ -18,11 +18,22 @@ nextBtn.addEventListener('click', function () {
 });
 function showSlide() {
   slides.forEach((slide, index) => {
-    if (counter == slides.length) {
-      counter = 0;
-    } else if (counter < 0) {
-      counter = slides.length - 1;
+    // if (counter == slides.length) {
+    //   counter = 0;
+    // } else if (counter < 0) {
+    //   counter = slides.length - 1;
+    // }
+    if (counter > 0) {
+      prevBtn.style.display = 'block';
+    } else {
+      prevBtn.style.display = 'none';
+    }
+    if (counter == slides.length - 1) {
+      nextBtn.style.display = 'none';
+    } else {
+      nextBtn.style.display = 'block';
     }
     slide.style.transform = `translateX(-${counter * 100}%)`;
   });
 }
+prevBtn.style.display = 'none';
