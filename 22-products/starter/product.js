@@ -6,6 +6,7 @@ const url = `https://course-api.com/javascript-store-single-product?id=${id}`;
 function displaySingleProduct(item) {
   const { colors, price, name, description, company } = item.fields;
   const url = item.fields.image[0].url;
+  document.title = name.toUpperCase();
   const colorsList = colors
     .map((color) => {
       return `<span class="product-color" style="background: ${color}"></span>`;
