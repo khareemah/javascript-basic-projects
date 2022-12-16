@@ -12,7 +12,6 @@ function displaySingleProduct(item) {
       return `<span class="product-color" style="background: ${color}"></span>`;
     })
     .join("");
-  console.log(colorsList);
   const productDOM = `
   <img src=${url} alt="" class="img">
             <div class="product-info">

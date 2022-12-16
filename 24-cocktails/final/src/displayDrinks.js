@@ -1,12 +1,12 @@
-import get from './getElement.js';
-import { hideLoading } from './toggleLoading.js';
+import get from "./getElement.js";
+import { hideLoading } from "./toggleLoading.js";
 const displayDrinks = ({ drinks }) => {
-  const section = get('.section-center');
-  const title = get('.title');
+  const section = get(".section-center");
+  const title = get(".title");
   if (!drinks) {
     // hide loading
     hideLoading();
-    title.textContent = 'sorry, no drinks matched your search';
+    title.textContent = "sorry, no drinks matched your search";
     section.innerHTML = null;
     return;
   }
@@ -21,9 +21,9 @@ const displayDrinks = ({ drinks }) => {
           </article>
         </a>`;
     })
-    .join('');
+    .join("");
   hideLoading();
-  title.textContent = '';
+  title.textContent = "";
   section.innerHTML = newDrinks;
   return section;
 };
