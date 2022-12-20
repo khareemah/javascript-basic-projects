@@ -9,8 +9,6 @@ const drinkIngredients = getElement(".drink-ingredients");
 const displayDrink = (data) => {
   hideLoading();
   const singleDrink = data.drinks[0];
-  console.log(data);
-  console.log(singleDrink);
 
   const {
     strDrink: name,
