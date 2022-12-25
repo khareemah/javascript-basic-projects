@@ -1,4 +1,4 @@
-import people from "../final/data.js";
+import people from "./data.js";
 function getElement(selector) {
   const element = document.querySelector(selector);
   if (element) {
@@ -57,6 +57,11 @@ function startSlider(type) {
   if (type == "prev") {
     active.classList.add("next");
     last.classList.add("active");
+    next = last.previousElementSibling;
+    if (!next) {
+      next = slideContainer.lastElementChild;
+    }
+    next.classList.remove("next");
     next.classList.add("last");
     return;
   }
