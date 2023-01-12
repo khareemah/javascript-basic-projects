@@ -216,15 +216,13 @@ Modal
   display: grid;
   place-items: center;
   transition: var(--transition);
-/*   visibility: hidden;
-  z-index: -10; */
-  display: none;
+  visibility: hidden;
+  z-index: -10;
 }
 /* OPEN/CLOSE MODAL */
 .open-modal {
-/*   visibility: visible;
-  z-index: 10; */
-  display: block;
+  visibility: visible;
+  z-index: 10;
 }
 .modal-container {
   background: var(--clr-white);
